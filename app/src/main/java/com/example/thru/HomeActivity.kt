@@ -1,5 +1,6 @@
 package com.example.thru
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thru.databinding.ActivityHomeBinding
@@ -14,5 +15,9 @@ class HomeActivity : AppCompatActivity()
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.playButton.setOnClickListener{
+            startActivity( Intent( this, GameActivity::class.java ) )
+        }
     }
 }
