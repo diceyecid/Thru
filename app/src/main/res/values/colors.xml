@@ -6,4 +6,8 @@
     <color name="text_dark">#FF434343</color>
     <color name="text_light">#FFE8F1F2</color>
     <color name="background">#FFFFFAFF</color>
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
 </resources>

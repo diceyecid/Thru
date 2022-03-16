@@ -11,48 +11,6 @@
     android:theme="@style/ThemeOverlay.Thru.FullscreenContainer"
     tools:context=".GameActivity">
 
-    <LinearLayout
-        android:id="@+id/wall"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:translationY="-50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/wallLeft"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/primary_red"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Space
-            android:id="@+id/wallEmpty"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/wallRight"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/primary_red"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
     <com.example.thru.OutlineTextView
         android:id="@+id/score"
         android:layout_width="wrap_content"
