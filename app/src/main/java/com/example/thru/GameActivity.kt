@@ -6,8 +6,10 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.SurfaceView
+import android.view.WindowInsets
 import com.example.thru.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity()
@@ -28,9 +30,31 @@ class GameActivity : AppCompatActivity()
         view = GameView( this, engine )
         setContentView( view )
 
+        // get screen width and height
+        Util.screenWidth = getScreenWidth()
+        Util.screenHeight = getScreenHeight()
+
         // event listeners
         binding.canvas.setOnClickListener{ reverseSquare() }
         binding.canvas.setOnLongClickListener{ pauseSquare() }
+    }
+
+
+    /********** screen width and height **********/
+
+
+    private fun getScreenWidth() : Int
+    {
+        val windowMetrics = windowManager.currentWindowMetrics
+        val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility( WindowInsets.Type.systemBars() )
+        return windowMetrics.bounds.width() - insets.left - insets.right
+    }
+
+    private fun getScreenHeight() : Int
+    {
+        val windowMetrics = windowManager.currentWindowMetrics
+        val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility( WindowInsets.Type.systemBars() )
+        return windowMetrics.bounds.height() - insets.left - insets.right
     }
 
 
@@ -51,25 +75,4 @@ class GameActivity : AppCompatActivity()
         return true
     }
 
-
-    /********** game loop **********/
-
-
-    // move wall from top to down
-    private fun moveWall()
-    {
-
-    }
-
-    // move square from left to right
-    private fun moveSquare()
-    {
-
-    }
-
-    // check if wall and square collide
-    private fun checkCollision()
-    {
-
-    }
 }

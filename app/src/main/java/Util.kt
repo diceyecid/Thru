@@ -6,6 +6,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 // helper functions
 object Util
 {
+    var screenWidth : Int = 0
+    var screenHeight : Int = 0
+
     fun hideSystemBars( window: Window )
     {
         val windowInsetsController = ViewCompat.getWindowInsetsController( window.decorView ) ?: return

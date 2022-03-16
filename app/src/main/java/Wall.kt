@@ -21,6 +21,8 @@ class Wall(
     private var rightWall : Rect
 
     // physic
+    var top : Int = INIT_Y
+        get() = leftWall.top
     private var speed : Int
 
     // render
@@ -29,7 +31,7 @@ class Wall(
     init
     {
         // randomize the empty slot position
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val screenWidth = Util.screenWidth
         val randomWidth = Random.nextInt( 1, screenWidth - emptyWidth - 1 )
 
         // shape
