@@ -1,5 +1,6 @@
 import android.content.Context
 import android.graphics.Canvas
+import android.util.Log
 import java.util.*
 
 private const val SPEED : Int = 5
@@ -67,5 +68,27 @@ class GameEngine( private val context : Context )
         val front = wallsAfter.peek()
         if( front != null && front.top > Util.screenHeight )
             wallsAfter.remove()
+    }
+
+
+    /********** player control **********/
+
+
+    // reverse square movement
+    fun reverseSquare()
+    {
+        square.reverseDir()
+    }
+
+    // pause square movement
+    fun pauseSquare()
+    {
+        square.pause()
+    }
+
+    // resume square movement
+    fun resumeSquare()
+    {
+        square.resume()
     }
 }

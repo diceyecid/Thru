@@ -15,6 +15,9 @@ class Square( private val context : Context, private var speed : Int )
     private val slot : Rect
     private val square : Rect
 
+    // physic
+    private var isMoving : Boolean = true
+
     // render
     private var slotPaint : Paint
     private var squarePaint : Paint
@@ -61,14 +64,17 @@ class Square( private val context : Context, private var speed : Int )
 
     fun update()
     {
-        // move square
-        square.offset( speed, 0 )
-
-        // if reached the boundary of slot, reverse direction
-        if( !slot.contains( square ) )
+        if( isMoving )
         {
-            speed *= -1
-            square.offset( speed * 2, 0 )
+            // move square
+            square.offset( speed, 0 )
+
+            // if reached the boundary of slot, reverse direction
+            if( !slot.contains( square ) )
+            {
+                reverseDir()
+                square.offset( speed * 2, 0 )
+            }
         }
     }
 
@@ -84,5 +90,24 @@ class Square( private val context : Context, private var speed : Int )
 
         canvas.drawRect( slotBorder, slotPaint )
         canvas.drawRect( square, squarePaint )
+    }
+
+
+    /********** logics **********/
+
+
+    fun reverseDir()
+    {
+        speed *= -1
+    }
+
+    fun pause()
+    {
+        isMoving = false
+    }
+
+    fun resume()
+    {
+        isMoving = true
     }
 }

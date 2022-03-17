@@ -3,14 +3,18 @@ package com.example.thru
 import GameEngine
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.WindowInsets
+import androidx.core.view.GestureDetectorCompat
 
-class GameActivity : AppCompatActivity()
+class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
 {
     private lateinit var view : SurfaceView
     private lateinit var engine : GameEngine
+    private lateinit var gestureDetector : GestureDetectorCompat
+    private var isLongClick : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -25,6 +29,7 @@ class GameActivity : AppCompatActivity()
         engine = GameEngine( this )
         view = GameView( this, engine )
         setContentView( view )
+        gestureDetector = GestureDetectorCompat( this, this )
     }
 
 
@@ -46,21 +51,34 @@ class GameActivity : AppCompatActivity()
     }
 
 
-    /********** player control **********/
+    /********** touch event handlers **********/
 
 
-    // reverse square movement
-    private fun reverseSquare()
+    override fun onTouchEvent(event: MotionEvent): Boolean
     {
-        Log.d( "onClick", "working" )
+        if( isLongClick && event.action == MotionEvent.ACTION_UP )
+        {
+            engine.resumeSquare()
+            isLongClick = false
+        }
+
+        return if( gestureDetector.onTouchEvent( event ) ) true else super.onTouchEvent(event)
     }
 
-    // pause square movement
-    private fun pauseSquare(): Boolean
+    override fun onSingleTapUp(p0: MotionEvent?): Boolean
     {
-        Log.d( "onLongClick", "working" )
-
+        engine.reverseSquare()
         return true
     }
 
+    override fun onLongPress(p0: MotionEvent?)
+    {
+        isLongClick = true
+        engine.pauseSquare()
+    }
+
+    override fun onDown(p0: MotionEvent?): Boolean { return true }
+    override fun onShowPress(p0: MotionEvent?) {}
+    override fun onScroll(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float) : Boolean { return true }
+    override fun onFling(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean { return true }
 }
