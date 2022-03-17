@@ -103,6 +103,11 @@ class Square( private val context : Context, private var speed : Int )
     /********** logics **********/
 
 
+    fun increaseSpeed()
+    {
+        speed++
+    }
+
     fun reverseDir()
     {
         speed *= -1

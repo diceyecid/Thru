@@ -1,25 +1,29 @@
-import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.Rect
-import androidx.core.content.ContextCompat
 import com.example.thru.GameActivity
-import com.example.thru.R
 import java.util.*
 
-private const val SPEED : Int = 5
+private const val INIT_SPEED : Int = 5
+private const val EMPTY_WIDTH_TOL : Int = 20
+private const val MAX_EMPTY_WIDTH : Int = 200 - EMPTY_WIDTH_TOL
+private const val MIN_EMPTY_WIDTH : Int = 60
+
+private const val INCREASE_SPEED : Int = 20
+private const val SHRINK_EMPTY : Int = 10
 
 class GameEngine( private val activity : GameActivity )
 {
     // game objects
-    private val square : Square = Square( activity, SPEED )
+    private val square : Square = Square( activity, INIT_SPEED )
     private val wallsBefore: Queue<Wall> = LinkedList()
     private val wallsAfter: Queue<Wall> = LinkedList()
     private val score : Score = Score( activity )
 
     // wall generation
-    private val emptyWidth : Int = 200
-    private var frameCount: Int = square.slotWidth / SPEED
+    private var speed : Int = INIT_SPEED
+    private var freq : Int = square.slotWidth / speed
+    private var frameCount : Int = freq
+    private var emptyWidth : Int = MAX_EMPTY_WIDTH
 
     // state
     var isGameOver : Boolean = false
@@ -58,9 +62,12 @@ class GameEngine( private val activity : GameActivity )
     // generate wall every 90 frames
     private fun generateWall()
     {
-        if( frameCount == square.slotWidth / SPEED )
+        if( frameCount == freq )
         {
-            wallsBefore.add( Wall( activity, ( Util.screenWidth - square.slotWidth ) / 2, emptyWidth , SPEED ) )
+            // randomize empty width within tolerance
+            val width = Random().nextInt( EMPTY_WIDTH_TOL ) + emptyWidth
+
+            wallsBefore.add( Wall( activity, ( Util.screenWidth - square.slotWidth ) / 2, width, speed ) )
             frameCount = 0
         }
     }
@@ -93,6 +100,23 @@ class GameEngine( private val activity : GameActivity )
         val front = wallsAfter.peek()
         if( front != null && front.top > Util.screenHeight )
             wallsAfter.remove()
+    }
+
+    // gradually increase difficulty
+    private fun increaseDifficulty()
+    {
+        // add difficulty by speeding up
+        if( score.value % INCREASE_SPEED == 0 )
+        {
+            speed++
+            freq = square.slotWidth / speed
+            square.increaseSpeed()
+        }
+        // add difficulty by shrinking empty space between walls
+        else if ( score.value % SHRINK_EMPTY == 0 && emptyWidth > MIN_EMPTY_WIDTH )
+        {
+            emptyWidth -= 10
+        }
     }
 
 
