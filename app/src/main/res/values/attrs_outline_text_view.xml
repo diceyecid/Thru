@@ -1,6 +1,0 @@
-<resources>
-    <declare-styleable name="OutlineTextView">
-        <attr name="TextStrokeWidth" format="float" />
-        <attr name="TextStrokeColor" format="color" />
-    </declare-styleable>
-</resources>
