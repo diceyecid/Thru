@@ -9,10 +9,11 @@ import com.example.thru.R
 import kotlin.random.Random
 
 private const val HEIGHT : Int = 150
-private const val INIT_Y : Int = 50
+private const val INIT_Y : Int = HEIGHT * -1
 
 class Wall(
     private val context : Context,
+    private val emptyOffset : Int,
     private val emptyWidth : Int
     )
 {
@@ -52,10 +53,8 @@ class Wall(
     fun update()
     {
         // move
-        leftWall.top += speed
-        leftWall.bottom += speed
-        rightWall.top += speed
-        rightWall.bottom += speed
+        leftWall.offset( 0, speed )
+        rightWall.offset( 0, speed )
     }
 
     fun draw( canvas : Canvas )

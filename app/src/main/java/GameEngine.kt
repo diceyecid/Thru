@@ -1,5 +1,4 @@
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.util.Log
 import java.util.*
@@ -7,25 +6,31 @@ import java.util.*
 class GameEngine( private val context : Context )
 {
     // game objects
-    private val wallsBefore: Queue<Wall> = LinkedList<Wall>()
-    private val wallsAfter: Queue<Wall> = LinkedList<Wall>()
+    private val wallsBefore: Queue<Wall> = LinkedList()
+    private val wallsAfter: Queue<Wall> = LinkedList()
+    private val square : Square = Square( context )
 
     // timer
     private var frameCount: Int = 90
+
+    init
+    {
+        square.slotWidth
+    }
 
 
     // update objects for each frame
     fun update()
     {
-
-        generateWall()
+        // move existing objects
         wallsBefore.forEach{ w -> w.update() }
-        detectCollision()
         wallsAfter.forEach{ w -> w.update() }
-        destroyWall()
+        square.update()
 
-        Log.d( "engine", "wallsBefore.size = ${wallsBefore.size}" )
-        Log.d( "engine", "wallsAfter.size = ${wallsAfter.size}" )
+        // logic on walls
+        generateWall()
+        detectCollision()
+        destroyWall()
 
         frameCount++
     }
@@ -35,6 +40,7 @@ class GameEngine( private val context : Context )
     {
         wallsBefore.forEach{ w -> w.draw( canvas ) }
         wallsAfter.forEach{ w -> w.draw( canvas ) }
+        square.draw( canvas )
     }
 
 
@@ -53,6 +59,7 @@ class GameEngine( private val context : Context )
 
     private fun detectCollision()
     {
+        // TODO: actually perform collision detection between walls and square
         val front = wallsBefore.peek()
         if( front != null && front.top >= Util.screenHeight - 500 )
             wallsAfter.add( wallsBefore.remove() )

@@ -1,20 +1,14 @@
 package com.example.thru
 
 import GameEngine
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.SurfaceView
 import android.view.WindowInsets
-import com.example.thru.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity()
 {
-    private lateinit var binding: ActivityGameBinding
     private lateinit var view : SurfaceView
     private lateinit var engine : GameEngine
 
@@ -22,21 +16,15 @@ class GameActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
 
-        // initialization
+        // initialize system related info
         Util.hideSystemBars( window )
-        binding = ActivityGameBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-        engine = GameEngine( this )
-        view = GameView( this, engine )
-        setContentView( view )
-
-        // get screen width and height
         Util.screenWidth = getScreenWidth()
         Util.screenHeight = getScreenHeight()
 
-        // event listeners
-        binding.canvas.setOnClickListener{ reverseSquare() }
-        binding.canvas.setOnLongClickListener{ pauseSquare() }
+        // initialize game
+        engine = GameEngine( this )
+        view = GameView( this, engine )
+        setContentView( view )
     }
 
 
