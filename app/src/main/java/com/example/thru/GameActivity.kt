@@ -1,18 +1,19 @@
 package com.example.thru
 
 import GameEngine
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.SurfaceView
-import android.view.WindowInsets
+import android.util.Log
+import android.view.*
+import android.widget.FrameLayout
 import androidx.core.view.GestureDetectorCompat
 
 class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
 {
-    private lateinit var view : SurfaceView
+    private lateinit var frame: FrameLayout
     private lateinit var engine : GameEngine
+    private lateinit var view : SurfaceView
     private lateinit var gestureDetector : GestureDetectorCompat
     private var isLongClick : Boolean = false
 
@@ -25,11 +26,16 @@ class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
         Util.screenWidth = getScreenWidth()
         Util.screenHeight = getScreenHeight()
 
+        // create frame
+        frame = FrameLayout( this )
+        frame.id = View.generateViewId()
+        setContentView( frame )
+
         // initialize game
         engine = GameEngine( this )
         view = GameView( this, engine )
-        setContentView( view )
         gestureDetector = GestureDetectorCompat( this, this )
+        frame.addView( view )
     }
 
 
@@ -81,4 +87,28 @@ class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
     override fun onShowPress(p0: MotionEvent?) {}
     override fun onScroll(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float) : Boolean { return true }
     override fun onFling(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean { return true }
+
+
+    /********** logic **********/
+
+
+    fun gameOver( newScore : Int )
+    {
+        // compare and set high score
+        val sharedPref = getPreferences( Context.MODE_PRIVATE ) ?: return
+        var highScore = sharedPref.getInt( "high_score", 0 )
+        if( newScore > highScore )
+        {
+            highScore = newScore
+            with( sharedPref.edit() )
+            {
+                putInt( "high_score", newScore )
+                apply()
+            }
+        }
+
+        // display game over fragment
+        val frag = GameOverFragment.newInstance( newScore, highScore )
+        supportFragmentManager.beginTransaction().add( frame.id, frag, "gameOver" ).commit()
+    }
 }

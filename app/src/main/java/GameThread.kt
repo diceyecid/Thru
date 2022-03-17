@@ -27,6 +27,13 @@ class GameThread(
 
         while( isRunning )
         {
+            // check if game is over
+            if( engine.isGameOver )
+            {
+                isRunning = false
+                break
+            }
+
             // update game logic
             engine.update()
 
@@ -50,7 +57,7 @@ class GameThread(
             }
             catch( ex: InterruptedException )
             {
-                Log.d( "Refresh Error", ex.toString() )
+                Log.d( "Refresh Error: ", ex.toString() )
             }
         }
     }

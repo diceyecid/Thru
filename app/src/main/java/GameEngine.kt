@@ -1,15 +1,15 @@
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.util.Log
+import com.example.thru.GameActivity
 import java.util.*
 
 private const val SPEED : Int = 5
 
-class GameEngine( private val context : Context )
+class GameEngine( private val activity : GameActivity )
 {
     // game objects
-    private val square : Square = Square( context, SPEED )
+    private val square : Square = Square( activity, SPEED )
     private val wallsBefore: Queue<Wall> = LinkedList()
     private val wallsAfter: Queue<Wall> = LinkedList()
 
@@ -17,8 +17,10 @@ class GameEngine( private val context : Context )
     private val emptyWidth : Int = 200
     private var frameCount: Int = square.slotWidth / SPEED
 
-    // scare
+    // states
     private var score : Int = 0
+    var isGameOver : Boolean = false
+        private  set
 
     // update objects for each frame
     fun update()
@@ -53,7 +55,7 @@ class GameEngine( private val context : Context )
     {
         if( frameCount == square.slotWidth / SPEED )
         {
-            wallsBefore.add( Wall( context, ( Util.screenWidth - square.slotWidth ) / 2, emptyWidth , SPEED ) )
+            wallsBefore.add( Wall( activity, ( Util.screenWidth - square.slotWidth ) / 2, emptyWidth , SPEED ) )
             frameCount = 0
         }
     }
@@ -67,12 +69,14 @@ class GameEngine( private val context : Context )
             // if the wall and square collided, game over
             if( Rect.intersects( front.leftWall, square.square ) || Rect.intersects( front.rightWall, square.square ) )
             {
-                // game over
+                isGameOver = true
+                activity.gameOver( score )
             }
 
             // if the wall passed the square, place it in the after queue
             if( front.top >= square.bottom )
             {
+                score++
                 wallsAfter.add(wallsBefore.remove())
             }
         }

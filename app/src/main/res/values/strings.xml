@@ -7,4 +7,9 @@
     <string name="init_score">0</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="homeText">Home</string>
+    <string name="againText">Again</string>
+    <string name="best_score">Best Score:</string>
+    <string name="your_score">Your Score:</string>
+    <string name="game_over">GAME OVER</string>
 </resources>
