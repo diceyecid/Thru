@@ -19,12 +19,13 @@ class Wall(
     )
 {
     // shape
-    private var leftWall : Rect
-    private var rightWall : Rect
+    val leftWall : Rect
+    val rightWall : Rect
 
     // physic
     var top : Int = INIT_Y
         get() = leftWall.top
+        private set
 
     // render
     private var paint : Paint
@@ -58,4 +59,8 @@ class Wall(
         canvas.drawRect( leftWall, paint )
         canvas.drawRect( rightWall, paint )
     }
+
+    /********** lgoic **********/
+
+
 }

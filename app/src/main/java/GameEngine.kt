@@ -1,5 +1,6 @@
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.util.Log
 import java.util.*
 
@@ -14,7 +15,10 @@ class GameEngine( private val context : Context )
 
     // wall generation
     private val emptyWidth : Int = 200
-    private var frameCount: Int = ( square.slotWidth - emptyWidth ) / 5
+    private var frameCount: Int = square.slotWidth / SPEED
+
+    // scare
+    private var score : Int = 0
 
     // update objects for each frame
     fun update()
@@ -47,7 +51,7 @@ class GameEngine( private val context : Context )
     // generate wall every 90 frames
     private fun generateWall()
     {
-        if( frameCount == ( square.slotWidth - emptyWidth ) / 5 )
+        if( frameCount == square.slotWidth / SPEED )
         {
             wallsBefore.add( Wall( context, ( Util.screenWidth - square.slotWidth ) / 2, emptyWidth , SPEED ) )
             frameCount = 0
@@ -56,10 +60,23 @@ class GameEngine( private val context : Context )
 
     private fun detectCollision()
     {
-        // TODO: actually perform collision detection between walls and square
         val front = wallsBefore.peek()
-        if( front != null && front.top >= Util.screenHeight - 500 )
-            wallsAfter.add( wallsBefore.remove() )
+
+        if( front != null )
+        {
+            // if the wall and square collided, game over
+            if( Rect.intersects( front.leftWall, square.square ) || Rect.intersects( front.rightWall, square.square ) )
+            {
+                // game over
+            }
+
+            // if the wall passed the square, place it in the after queue
+            if( front.top >= square.bottom )
+            {
+                wallsAfter.add(wallsBefore.remove())
+            }
+        }
+
     }
 
     // destroy wall if it's out of screen

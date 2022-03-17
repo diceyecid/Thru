@@ -13,10 +13,13 @@ class Square( private val context : Context, private var speed : Int )
 {
     // shape
     private val slot : Rect
-    private val square : Rect
+    val square : Rect
 
     // physic
-    private var isMoving : Boolean = true
+    private var isMoving : Boolean
+    var bottom : Int
+        get() = square.bottom
+        private set
 
     // render
     private var slotPaint : Paint
@@ -49,6 +52,10 @@ class Square( private val context : Context, private var speed : Int )
             squarePosX + SQUARE_WIDTH,
             posY + SQUARE_WIDTH
         )
+
+        // physic
+        isMoving = true
+        bottom = square.bottom
 
         // render
         slotPaint = Paint()

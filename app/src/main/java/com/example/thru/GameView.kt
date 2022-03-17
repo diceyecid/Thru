@@ -3,6 +3,7 @@ package com.example.thru
 import GameEngine
 import GameThread
 import android.content.Context
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
@@ -36,5 +37,20 @@ class GameView(
     override fun surfaceDestroyed(p0: SurfaceHolder)
     {
         gameThread.isRunning = false
+
+        // stop thread
+        var retry = true
+        while( retry )
+        {
+            try
+            {
+                gameThread.join()
+                retry = false
+            }
+            catch( ex : InterruptedException )
+            {
+                Log.d( "Thread Join Error: ", ex.toString() )
+            }
+        }
     }
 }
