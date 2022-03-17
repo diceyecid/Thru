@@ -9,14 +9,11 @@ import com.example.thru.R
 private const val MAX_SLOT_WIDTH : Int = 800
 private const val SQUARE_WIDTH : Int = 50
 
-class Square( private val context : Context )
+class Square( private val context : Context, private var speed : Int )
 {
     // shape
     private val slot : Rect
     private val square : Rect
-
-    // physic
-    private var speed : Int
 
     // render
     private var slotPaint : Paint
@@ -50,9 +47,6 @@ class Square( private val context : Context )
             posY + SQUARE_WIDTH
         )
 
-        // physics
-        speed = 5
-
         // render
         slotPaint = Paint()
         slotPaint.color = ContextCompat.getColor( context, R.color.secondary_blue )
@@ -74,7 +68,7 @@ class Square( private val context : Context )
         if( !slot.contains( square ) )
         {
             speed *= -1
-            square.offset( speed, 0 )
+            square.offset( speed * 2, 0 )
         }
     }
 

@@ -1,31 +1,27 @@
 import android.content.Context
 import android.graphics.Canvas
-import android.util.Log
 import java.util.*
+
+private const val SPEED : Int = 5
 
 class GameEngine( private val context : Context )
 {
     // game objects
+    private val square : Square = Square( context, SPEED )
     private val wallsBefore: Queue<Wall> = LinkedList()
     private val wallsAfter: Queue<Wall> = LinkedList()
-    private val square : Square = Square( context )
 
-    // timer
-    private var frameCount: Int = 90
-
-    init
-    {
-        square.slotWidth
-    }
-
+    // wall generation
+    private val emptyWidth : Int = 200
+    private var frameCount: Int = ( square.slotWidth - emptyWidth ) / 5
 
     // update objects for each frame
     fun update()
     {
         // move existing objects
+        square.update()
         wallsBefore.forEach{ w -> w.update() }
         wallsAfter.forEach{ w -> w.update() }
-        square.update()
 
         // logic on walls
         generateWall()
@@ -38,9 +34,9 @@ class GameEngine( private val context : Context )
     // render objects for each frame
     fun draw( canvas: Canvas )
     {
+        square.draw( canvas )
         wallsBefore.forEach{ w -> w.draw( canvas ) }
         wallsAfter.forEach{ w -> w.draw( canvas ) }
-        square.draw( canvas )
     }
 
 
@@ -50,9 +46,9 @@ class GameEngine( private val context : Context )
     // generate wall every 90 frames
     private fun generateWall()
     {
-        if( frameCount == 90 )
+        if( frameCount == ( square.slotWidth - emptyWidth ) / 5 )
         {
-            wallsBefore.add( Wall( context, 200 ) )
+            wallsBefore.add( Wall( context, ( Util.screenWidth - square.slotWidth ) / 2, emptyWidth , SPEED ) )
             frameCount = 0
         }
     }

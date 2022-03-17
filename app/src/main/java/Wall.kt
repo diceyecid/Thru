@@ -14,7 +14,8 @@ private const val INIT_Y : Int = HEIGHT * -1
 class Wall(
     private val context : Context,
     private val emptyOffset : Int,
-    private val emptyWidth : Int
+    private val emptyWidth : Int,
+    private val speed : Int
     )
 {
     // shape
@@ -24,7 +25,6 @@ class Wall(
     // physic
     var top : Int = INIT_Y
         get() = leftWall.top
-    private var speed : Int
 
     // render
     private var paint : Paint
@@ -32,15 +32,11 @@ class Wall(
     init
     {
         // randomize the empty slot position
-        val screenWidth = Util.screenWidth
-        val randomWidth = Random.nextInt( 1, screenWidth - emptyWidth - 1 )
+        val randomWidth = Random.nextInt( emptyOffset, Util.screenWidth - emptyOffset - emptyWidth - 1 )
 
         // shape
         leftWall = Rect( 0, INIT_Y, randomWidth, INIT_Y + HEIGHT )
-        rightWall = Rect( randomWidth + emptyWidth, INIT_Y, screenWidth, INIT_Y + HEIGHT )
-
-        // physic
-        speed = 5
+        rightWall = Rect( randomWidth + emptyWidth, INIT_Y, Util.screenWidth, INIT_Y + HEIGHT )
 
         // render
         paint = Paint()
