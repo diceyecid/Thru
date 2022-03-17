@@ -8,14 +8,13 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import androidx.core.view.GestureDetectorCompat
+import androidx.core.view.MotionEventCompat
 
-class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
+class GameActivity : AppCompatActivity()
 {
     private lateinit var frame: FrameLayout
     private lateinit var engine : GameEngine
     private lateinit var view : SurfaceView
-    private lateinit var gestureDetector : GestureDetectorCompat
-    private var isLongClick : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -34,7 +33,6 @@ class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
         // initialize game
         engine = GameEngine( this )
         view = GameView( this, engine )
-        gestureDetector = GestureDetectorCompat( this, this )
         frame.addView( view )
     }
 
@@ -62,31 +60,24 @@ class GameActivity : AppCompatActivity(), GestureDetector.OnGestureListener
 
     override fun onTouchEvent(event: MotionEvent): Boolean
     {
-        if( isLongClick && event.action == MotionEvent.ACTION_UP )
+        return if( !engine.isGameOver )
         {
-            engine.resumeSquare()
-            isLongClick = false
+            when( event.action )
+            {
+                MotionEvent.ACTION_DOWN -> {
+                    engine.pauseSquare()
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    engine.reverseSquare()
+                    engine.resumeSquare()
+                    true
+                }
+                else -> super.onTouchEvent( event )
+            }
         }
-
-        return if( gestureDetector.onTouchEvent( event ) ) true else super.onTouchEvent(event)
+        else super.onTouchEvent( event )
     }
-
-    override fun onSingleTapUp(p0: MotionEvent?): Boolean
-    {
-        engine.reverseSquare()
-        return true
-    }
-
-    override fun onLongPress(p0: MotionEvent?)
-    {
-        isLongClick = true
-        engine.pauseSquare()
-    }
-
-    override fun onDown(p0: MotionEvent?): Boolean { return true }
-    override fun onShowPress(p0: MotionEvent?) {}
-    override fun onScroll(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float) : Boolean { return true }
-    override fun onFling(p0: MotionEvent?, p1: MotionEvent?, p2: Float, p3: Float): Boolean { return true }
 
 
     /********** logic **********/
