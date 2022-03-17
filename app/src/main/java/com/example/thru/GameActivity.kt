@@ -83,7 +83,7 @@ class GameActivity : AppCompatActivity()
     fun gameOver( newScore : Int )
     {
         // compare and set high score
-        val sharedPref = getPreferences( Context.MODE_PRIVATE ) ?: return
+        val sharedPref = getSharedPreferences( "thru", Context.MODE_PRIVATE )
         var highScore = sharedPref.getInt( "high_score", 0 )
         if( newScore > highScore )
         {
