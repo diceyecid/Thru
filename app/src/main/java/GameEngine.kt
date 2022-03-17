@@ -1,7 +1,10 @@
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Rect
+import androidx.core.content.ContextCompat
 import com.example.thru.GameActivity
+import com.example.thru.R
 import java.util.*
 
 private const val SPEED : Int = 5
@@ -12,13 +15,13 @@ class GameEngine( private val activity : GameActivity )
     private val square : Square = Square( activity, SPEED )
     private val wallsBefore: Queue<Wall> = LinkedList()
     private val wallsAfter: Queue<Wall> = LinkedList()
+    private val score : Score = Score( activity )
 
     // wall generation
     private val emptyWidth : Int = 200
     private var frameCount: Int = square.slotWidth / SPEED
 
-    // states
-    private var score : Int = 0
+    // state
     var isGameOver : Boolean = false
         private  set
 
@@ -30,9 +33,10 @@ class GameEngine( private val activity : GameActivity )
         wallsBefore.forEach{ w -> w.update() }
         wallsAfter.forEach{ w -> w.update() }
 
-        // logic on walls
+        // game logic
         generateWall()
         detectCollision()
+        increaseScore()
         destroyWall()
 
         frameCount++
@@ -44,6 +48,7 @@ class GameEngine( private val activity : GameActivity )
         square.draw( canvas )
         wallsBefore.forEach{ w -> w.draw( canvas ) }
         wallsAfter.forEach{ w -> w.draw( canvas ) }
+        score.draw( canvas )
     }
 
 
@@ -60,27 +65,26 @@ class GameEngine( private val activity : GameActivity )
         }
     }
 
+    // if the wall and square collided, game over
     private fun detectCollision()
     {
         val front = wallsBefore.peek()
-
-        if( front != null )
+        if( front != null && ( Rect.intersects( front.leftWall, square.square ) || Rect.intersects( front.rightWall, square.square ) ) )
         {
-            // if the wall and square collided, game over
-            if( Rect.intersects( front.leftWall, square.square ) || Rect.intersects( front.rightWall, square.square ) )
-            {
-                isGameOver = true
-                activity.gameOver( score )
-            }
-
-            // if the wall passed the square, place it in the after queue
-            if( front.top >= square.bottom )
-            {
-                score++
-                wallsAfter.add(wallsBefore.remove())
-            }
+            isGameOver = true
+            activity.gameOver( score.value )
         }
+    }
 
+    // if the wall passed the square, place it in the after queue and add score
+    private fun increaseScore()
+    {
+        val front = wallsBefore.peek()
+        if( front != null && front.top >= square.bottom )
+        {
+            wallsAfter.add( wallsBefore.remove() )
+            score.add()
+        }
     }
 
     // destroy wall if it's out of screen

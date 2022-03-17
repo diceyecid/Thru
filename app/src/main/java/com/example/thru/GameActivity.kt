@@ -4,11 +4,8 @@ import GameEngine
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
-import androidx.core.view.GestureDetectorCompat
-import androidx.core.view.MotionEventCompat
 
 class GameActivity : AppCompatActivity()
 {
